@@ -1,0 +1,30 @@
+﻿
+@model Vidly.ViewModels.CustomersViewModel
+@{
+    ViewBag.Title = "Customers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Customers</h2>
+<div class="list-group">
+    @if (Model.Customers.Count == 0)
+    {
+        <text>There are no customers available</text>
+    }
+    else
+    {
+
+
+        foreach (var customer in Model.Customers)
+        {
+            @Html.ActionLink(@customer.Name + ", Age: " + @customer.Age, "Details", new {id = customer.Id}, new { @class = "list-group-item" })
+        }
+
+
+                    @*<a href="#" class="list-group-item"> @customer.Name </a>*@
+                
+
+
+
+    }
+</div>

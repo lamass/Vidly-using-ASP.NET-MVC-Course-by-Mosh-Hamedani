@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Vidly.Models;
+using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
@@ -8,12 +12,54 @@ namespace Vidly.Controllers
     {
 
 
+        public ViewResult Index()
+        {
+            var movies = GetMovies();
+            var viewModel = new MoviesViewModel()
+            {
+                Movies = movies.ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        private IEnumerable<Movie> GetMovies()
+        {
+            return new List<Movie>
+            {
+                new Movie {Id = 1, Name = "Shrek"},
+                new Movie {Id = 2, Name = "Pulp Fiction"}
+            };
+        }
+
+
+
+
+
+
+
         // GET: Movies/Random
+        // using a viewModel so that the view can access both Movie and Customer models.
         public ActionResult Random()
         {
             var movie = new Movie() { Name = "Shrek!" };
 
-            return View(movie);
+            // list of customer objects
+            var customers = new List<Customer>
+            {
+                new Customer {Name = "Customer 1"},
+                new Customer {Name = "Customer 2"}
+            };
+
+            // RandomMovieViewModel allows access to multiple models for the View 'Random.cshtml' 
+            var viewModel = new RandomMovieViewModel()
+            {
+                Movie = movie,
+                Customers = customers
+            };
+           
+           
+            return View(viewModel);
 
         }
 
