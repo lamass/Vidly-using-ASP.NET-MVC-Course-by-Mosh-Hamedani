@@ -1,0 +1,31 @@
+﻿@model Vidly.ViewModels.MoviesViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Movies</h2>
+<div class="list-group">
+    @if (Model.Movies.Count == 0)
+    {
+        <text>There are no movies available</text>
+    }
+    else
+    {
+
+
+        foreach (var movie in Model.Movies)
+        {
+            @Html.ActionLink(movie.Name, "Details", new { id = movie.Id }, new { @class = "list-group-item" })
+        }
+
+
+        @*<a href="#" class="list-group-item"> @customer.Name </a>*@
+
+
+
+
+    }
+</div>
+
+
+
