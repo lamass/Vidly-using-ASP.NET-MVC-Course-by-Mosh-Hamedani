@@ -5,7 +5,20 @@
     ViewBag.Title = "Details";
 }
 
-@*<h2>@Model.Name</h2>
-<h3>@Model.Age</h3>*@
-<h2>@Model.CustomerDetail.Name</h2>
-<h3>@Model.CustomerDetail.Age</h3>
+
+<div class="list-group-item">
+
+    <ul>
+        <li class="list-group-item"><strong>Name:</strong> @Model.CustomerDetail.Name</li>
+        @if (@Model.CustomerDetail.BirthDate != null)
+        {
+            <li class="list-group-item"><strong>Birth Date:</strong> @Model.CustomerDetail.BirthDate.Value.ToShortDateString()</li>
+        }
+        
+        <li class="list-group-item"><strong>Discount:</strong> @Model.CustomerDetail.MembershipType.DiscountRate%</li>
+    </ul>
+
+</div>
+>
+
+

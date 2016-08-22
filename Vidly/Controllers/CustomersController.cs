@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,23 +11,48 @@ namespace Vidly.Controllers
 {
     public class CustomersController : Controller
     {
+        // allows access to database
+        private ApplicationDbContext _context;
+
+        // initialize ApplicationDbContext in CustomersController Constructor
+        public CustomersController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        // dispose of ApplicaitonDbContext
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         public ViewResult Index()
         {
-            var customers = GetCustomers();
+            // retreive Customers model via DbContext
+            // Include method is used for 'eager loading' to include the MembershipType property (and cooresponding class)
+            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
 
             var viewModel = new CustomersViewModel()
             {
-                Customers = customers.ToList()
+                Customers = customers
             };
 
             return View(viewModel);
 
         }
 
-        public ActionResult Details(int id )
+       
+        public ActionResult Details(int? id, MembershipType membershipType )
         {
-            var customer = GetCustomers().SingleOrDefault(c => c.Id == id);
+            if (id == null)
+            {
+                return Content("No customers were selected");
+            }
 
+            // retreive Customers model via DbContext
+                // .Include() method is used for eager loading.  Includes related data type 'MembershipType'
+            var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
+            
             var viewModel = new DetailsViewModel()
             {
                 CustomerDetail = customer
@@ -41,16 +67,32 @@ namespace Vidly.Controllers
         }
 
 
-       
 
-        private IEnumerable<Customer> GetCustomers()
-        {
-            return new List<Customer>
-            {
-                new Customer() {Id = 1, Name = "John Smith", Age = 54},
-                new Customer() {Id = 2, Name = "Jane Simmons", Age = 34}
-            };
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //***************************** OLD CODE ********************************************************
+
+       
+        // method GetCustomers() is no longer being used*************************
+        //private IEnumerable<Customer> GetCustomers()
+        //{
+        //    return new List<Customer>
+        //    {
+        //        new Customer() {Id = 1, Name = "John Smith", Age = 54},
+        //        new Customer() {Id = 2, Name = "Jane Simmons", Age = 34}
+        //    };
+        //}
 
 
 

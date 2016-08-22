@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -10,32 +11,55 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
+        // declare DbContext variable
+        private ApplicationDbContext _context;
 
+        // class constructor creates instance of DbContext for variable _context
+        public MoviesController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
 
         public ViewResult Index()
         {
-            var movies = GetMovies();
+            var movies = _context.Movies.Include(m => m.Genre).ToList();
             var viewModel = new MoviesViewModel()
             {
-                Movies = movies.ToList()
+                Movies = movies
             };
 
             return View(viewModel);
         }
 
-        private IEnumerable<Movie> GetMovies()
-        {
-            return new List<Movie>
-            {
-                new Movie {Id = 1, Name = "Shrek"},
-                new Movie {Id = 2, Name = "Pulp Fiction"}
-            };
-        }
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+        //private IEnumerable<Movie> GetMovies()
+        //{
+        //    return new List<Movie>
+        //    {
+        //        new Movie {Id = 1, Name = "Shrek"},
+        //        new Movie {Id = 2, Name = "Pulp Fiction"}
+        //    };
+        //}
 
 
         // GET: Movies/Random
