@@ -1,4 +1,5 @@
 ﻿
+
 @model Vidly.ViewModels.CustomersViewModel
 @{
     ViewBag.Title = "Customers";
@@ -6,25 +7,33 @@
 }
 
 <h2>Customers</h2>
-<div class="list-group">
+
     @if (Model.Customers.Count == 0)
     {
         <text>There are no customers available</text>
     }
     else
     {
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Membership Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Model.Customers)
+                {
+                <tr>
+                    <td> @Html.ActionLink(@customer.Name, "Details", new {id = customer.Id}, new {@class = ""})</td>
+                    <td>@customer.MembershipType.Name</td>
+                </tr>
+                }
+            </tbody>
+
+            @*<a href="#" class="list-group-item"> @customer.Name </a>*@
 
 
-        foreach (var customer in Model.Customers)
-        {
-            @Html.ActionLink(@customer.Name + ", Age: " + @customer.Age, "Details", new {id = customer.Id}, new { @class = "list-group-item" })
-        }
-
-
-                    @*<a href="#" class="list-group-item"> @customer.Name </a>*@
-                
-
-
+        </table>
 
     }
-</div>
