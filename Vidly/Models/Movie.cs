@@ -16,6 +16,7 @@ namespace Vidly.Models
 
         public DateTime DateAdded { get; set; }
         public byte  InStock { get; set; }
+        public DateTime ReleaseDate { get; set; }
     }
 
     

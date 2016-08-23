@@ -36,6 +36,29 @@ namespace Vidly.Controllers
             return View(viewModel);
         }
 
+        public ActionResult MovieDetails(int? id)
+        {
+            if (id == null)
+            {
+                return Content("No customers were selected");
+            }
+
+            // retreive Customers model via DbContext
+            // .Include() method is used for eager loading.  Includes related data type 'MembershipType'
+            var movie = _context.Movies.Include(c => c.Genre).SingleOrDefault(m => m.Id == id);
+
+            var viewModel = new MovieDetailViewModel()
+            {
+                Movie = movie
+            };
+
+            if (movie == null)
+                //return HttpNotFound();
+                return Content("The selected movie has not been found!");
+
+            // return View(customer);
+            return View(viewModel);
+        }
 
 
 
