@@ -1,0 +1,20 @@
+﻿
+@model Vidly.ViewModels.MovieDetailViewModel
+@{
+    ViewBag.Title = "MovieDetails";
+}
+
+<h2>@Model.Movie.Name</h2>
+
+<div class="list-group-item">
+
+    <ul>
+        <li class="list-group-item"><strong>Genre:</strong> @Model.Movie.Genre.GenreName</li>
+        <li class="list-group-item"><strong>Release Date:</strong> @Model.Movie.ReleaseDate.ToLongDateString()</li>
+        <li class="list-group-item"><strong>Date Added:</strong> @Model.Movie.DateAdded.ToLongDateString()</li>
+        <li class="list-group-item"><strong>Discount:</strong> @Model.Movie.InStock</li>
+        
+    </ul>
+
+</div>
+
