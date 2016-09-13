@@ -15,6 +15,7 @@ namespace Vidly.Controllers
         private ApplicationDbContext _context;
 
         // initialize ApplicationDbContext in CustomersController Constructor
+        // test note for git
         public CustomersController()
         {
             _context = new ApplicationDbContext();
