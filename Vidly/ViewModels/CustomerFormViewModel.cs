@@ -7,7 +7,7 @@ using Vidly.Models;
 
 namespace Vidly.ViewModels
 {
-    public class NewCustomerViewModel
+    public class CustomerFormViewModel
     {
         public Customer Customer = new Customer();
 
