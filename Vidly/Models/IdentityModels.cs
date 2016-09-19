@@ -27,10 +27,8 @@ namespace Vidly.Models
 
         // add membership type table to database
         public DbSet<MembershipType> MembershipTypes { get; set; }
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
-        {
-        }
+
+       public DbSet<Genre> Genres { get; set; }
 
         public static ApplicationDbContext Create()
         {
