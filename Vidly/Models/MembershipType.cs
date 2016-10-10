@@ -12,5 +12,10 @@ namespace Vidly.Models
         public short SignUpFee { get; set; }
         public byte DurationInMonths { get; set; }
         public byte DiscountRate { get; set; }
+
+
+        // These properties are used in Min18YearsIfAMember.cs for validation
+        public static readonly byte unknown = 0;
+        public static readonly byte payAsYouGo = 1;
     }
 }

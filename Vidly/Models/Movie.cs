@@ -9,6 +9,8 @@ namespace Vidly.Models
     public class Movie
     {
         public int Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
         public Genre Genre { get; set; }
@@ -17,7 +19,9 @@ namespace Vidly.Models
 
         public DateTime DateAdded { get; set; }
         [Display(Name = "Number in Stock")]
-        public byte  InStock { get; set; }
+        [Range (1, 20)]
+        [Required(ErrorMessage = "The Number in Stock field must be between 1 and 20")]
+        public byte InStock { get; set; }
 
         [Display(Name="Release Date")]
         public DateTime ReleaseDate { get; set; }
