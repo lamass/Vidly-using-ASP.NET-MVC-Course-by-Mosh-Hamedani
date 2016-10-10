@@ -30,21 +30,64 @@ namespace Vidly.Controllers
         // Controller for New.cshtml
         public ActionResult New()
         {
-            // added DbSet MembershipTypes to IdentityModels.ApplicationDbContext
-            var membershipTypes = _context.MembershipTypes.ToList();
-            var viewModel = new CustomerFormViewModel
-            {
-               MembershipTypes = membershipTypes
-            };
-            return View("CustomerForm", viewModel);
+        // added DbSet MembershipTypes to IdentityModels.ApplicationDbContext
+        var membershipTypes = _context.MembershipTypes.ToList();
+        var viewModel = new CustomerFormViewModel
+        {
+            Customer = new Customer(),
+            MembershipTypes = membershipTypes
+        };
+                return View("NewCustomerForm", viewModel);
         }
 
+        public ActionResult Edit(int id)
+        {
+            // edit
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return HttpNotFound();
+
+            var viewModel = new CustomerFormViewModel
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes.ToList()
+            };
+
+            return View("EditCustomerForm", viewModel);
+        }
 
         // MVC framework will map request data to viewModel object 'model binding'
         // viewModel is binded to the request data
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer customer)
         {
+            // If user input is not valid, user is redirected to customer form.
+            if (!ModelState.IsValid)
+            {
+                if (customer.Id == 0)
+                {
+                    var viewModel = new CustomerFormViewModel
+                    {
+                        Customer = customer,
+                        MembershipTypes = _context.MembershipTypes.ToList()
+                    };
+                    return View("NewCustomerForm", viewModel);
+                }
+                else
+                {
+                    var viewModel = new CustomerFormViewModel
+                    {
+                        Customer = customer,
+                        MembershipTypes = _context.MembershipTypes.ToList()
+                    };
+                    return View("EditCustomerForm", viewModel);
+                }
+                
+
+            }
             if (customer.Id == 0)
             {
                 _context.Customers.Add(customer);
@@ -107,21 +150,7 @@ namespace Vidly.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Edit(int id)
-        {
-            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
-
-            if (customer == null)
-                return HttpNotFound();
-
-            var viewModel = new CustomerFormViewModel
-            {
-                Customer = customer,
-                MembershipTypes = _context.MembershipTypes.ToList()
-            };
-
-            return View("CustomerForm", viewModel);
-        }
+      
 
 
 

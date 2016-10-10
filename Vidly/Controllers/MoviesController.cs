@@ -33,16 +33,42 @@ namespace Vidly.Controllers
             {
                 Genres = genres
             };
-            return View("MovieForm", viewModel);
+            return View("NewMovieForm", viewModel);
         }
 
 
         // MVC framework will map request data to viewModel object 'model binding'
         // viewModel is binded to the request data
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
-            if (movie.Id == 0)
+            // If user input is not valid, user is redirected to customer form.
+
+            if (!ModelState.IsValid)
+            {
+                if (movie.Id == 0)
+                {
+                    var viewModel = new MovieFormViewModel
+                    {
+                        Movie = movie,
+                        Genres = _context.Genres.ToList()
+                    };
+                    return View("NewMovieForm", viewModel);
+                }
+                else
+                {
+                    var viewModel = new MovieFormViewModel
+                    {
+                        Movie = movie,
+                        Genres = _context.Genres.ToList()
+                    };
+                    return View("EditMovieForm", viewModel);
+                }
+            }
+
+
+                if (movie.Id == 0)
             {
                 movie.DateAdded = DateTime.Now;
                 _context.Movies.Add(movie);
@@ -56,11 +82,6 @@ namespace Vidly.Controllers
                 movieInDb.ReleaseDate = movie.ReleaseDate;
                 movieInDb.GenreId = movie.GenreId;
                 movieInDb.InStock = movie.InStock;
-                
-
-
-                // the following line of code will work, however it will introduce security flaws
-                //TryUpdateModel(customerInDb);
 
             }
 
@@ -119,7 +140,7 @@ namespace Vidly.Controllers
                 Genres = _context.Genres.ToList()
             };
 
-            return View("MovieForm", viewModel);
+            return View("EditMovieForm", viewModel);
         }
 
 
