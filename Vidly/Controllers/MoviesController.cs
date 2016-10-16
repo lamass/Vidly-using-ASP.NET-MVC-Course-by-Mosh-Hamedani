@@ -29,14 +29,29 @@ namespace Vidly.Controllers
         {
             // added DbSet Genre to IdentityModels.ApplicationDbContext
             var genres = _context.Genres.ToList();
-            var viewModel = new MovieFormViewModel
+            var viewModel = new MovieFormViewModel()
             {
                 Genres = genres
             };
-            return View("NewMovieForm", viewModel);
+            return View("MovieForm", viewModel);
         }
 
 
+        public ActionResult Edit(int id)
+        {
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return HttpNotFound();
+
+            var viewModel = new MovieFormViewModel(movie)
+            {
+              
+                Genres = _context.Genres.ToList()
+            };
+
+            return View("MovieForm", viewModel);
+        }
         // MVC framework will map request data to viewModel object 'model binding'
         // viewModel is binded to the request data
         [HttpPost]
@@ -47,28 +62,18 @@ namespace Vidly.Controllers
 
             if (!ModelState.IsValid)
             {
-                if (movie.Id == 0)
-                {
-                    var viewModel = new MovieFormViewModel
+              
+                    var viewModel = new MovieFormViewModel(movie)
                     {
-                        Movie = movie,
                         Genres = _context.Genres.ToList()
                     };
-                    return View("NewMovieForm", viewModel);
-                }
-                else
-                {
-                    var viewModel = new MovieFormViewModel
-                    {
-                        Movie = movie,
-                        Genres = _context.Genres.ToList()
-                    };
-                    return View("EditMovieForm", viewModel);
-                }
+                    return View("MovieForm", viewModel);
+                
+               
             }
 
 
-                if (movie.Id == 0)
+            if (movie.Id == 0)
             {
                 movie.DateAdded = DateTime.Now;
                 _context.Movies.Add(movie);
@@ -127,21 +132,7 @@ namespace Vidly.Controllers
         }
 
 
-        public ActionResult Edit(int id)
-        {
-            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
-
-            if (movie == null)
-                return HttpNotFound();
-
-            var viewModel = new MovieFormViewModel
-            {
-                Movie = movie,
-                Genres = _context.Genres.ToList()
-            };
-
-            return View("EditMovieForm", viewModel);
-        }
+        
 
 
 

@@ -32,12 +32,12 @@ namespace Vidly.Controllers
         {
         // added DbSet MembershipTypes to IdentityModels.ApplicationDbContext
         var membershipTypes = _context.MembershipTypes.ToList();
-        var viewModel = new CustomerFormViewModel
+        var viewModel = new CustomerFormViewModel()
         {
-            Customer = new Customer(),
+            
             MembershipTypes = membershipTypes
         };
-                return View("NewCustomerForm", viewModel);
+                return View("CustomerForm", viewModel);
         }
 
         public ActionResult Edit(int id)
@@ -48,13 +48,13 @@ namespace Vidly.Controllers
             if (customer == null)
                 return HttpNotFound();
 
-            var viewModel = new CustomerFormViewModel
+            var viewModel = new CustomerFormViewModel(customer)
             {
-                Customer = customer,
+                
                 MembershipTypes = _context.MembershipTypes.ToList()
             };
 
-            return View("EditCustomerForm", viewModel);
+            return View("CustomerForm", viewModel);
         }
 
         // MVC framework will map request data to viewModel object 'model binding'
@@ -66,26 +66,12 @@ namespace Vidly.Controllers
         {
             // If user input is not valid, user is redirected to customer form.
             if (!ModelState.IsValid)
-            {
-                if (customer.Id == 0)
-                {
-                    var viewModel = new CustomerFormViewModel
-                    {
-                        Customer = customer,
+            {  
+                    var viewModel = new CustomerFormViewModel (customer)
+                    { 
                         MembershipTypes = _context.MembershipTypes.ToList()
                     };
-                    return View("NewCustomerForm", viewModel);
-                }
-                else
-                {
-                    var viewModel = new CustomerFormViewModel
-                    {
-                        Customer = customer,
-                        MembershipTypes = _context.MembershipTypes.ToList()
-                    };
-                    return View("EditCustomerForm", viewModel);
-                }
-                
+                    return View("CustomerForm", viewModel);
 
             }
             if (customer.Id == 0)
