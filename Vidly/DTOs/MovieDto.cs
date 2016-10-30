@@ -14,9 +14,8 @@ namespace Vidly.DTOs
         [Required]
         public string Name { get; set; }
 
-        // commented out Genre to decouple Dto from domain model
-        //[Required]
-        //public Genre Genre { get; set; }
+       // using type GenreDto to decouple Dto from domain model
+        public GenreDto Genre { get; set; }
 
         public byte GenreId { get; set; }
 
