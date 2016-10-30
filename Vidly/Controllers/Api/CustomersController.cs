@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Data.Entity;
 using System.Web.Http;
 using Vidly.DTOs;
 using Vidly.Models;
@@ -19,16 +17,20 @@ namespace Vidly.Controllers.Api
             _context = new ApplicationDbContext();
         }
         // GET /api/customers
-        public IEnumerable<CustomerDto> GetCustomers()
+        public IHttpActionResult GetCustomers()
         {
-            // this calls the delegate referring to Mapper method in Mapping Profile
-            return _context.Customers.ToList().Select(Mapper.Map<Customer, CustomerDto>);
+            var customerDtos = _context.Customers
+                .Include(c => c.MembershipType).ToList()
+                .Select(Mapper.Map<Customer, CustomerDto>);
+
+            return Ok (customerDtos);
         }
 
         // GET /api/customer/1
         public IHttpActionResult GetCustomer(int id)
         {
-            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            var customer = _context.Customers
+                .SingleOrDefault(c => c.Id == id);
 
             if (customer == null)
                 return NotFound();
@@ -54,15 +56,15 @@ namespace Vidly.Controllers.Api
 
         // PUT /api/customers/1
         [HttpPut]
-        public void UpdateCustomer(int id, CustomerDto customerDto)
+        public IHttpActionResult UpdateCustomer(int id, CustomerDto customerDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customerInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             Mapper.Map(customerDto, customerInDb);
 
@@ -73,19 +75,24 @@ namespace Vidly.Controllers.Api
             //customerInDb.MembershipTypeId = customerDto.MembershipTypeId;
 
             _context.SaveChanges();
+
+            return Ok();
+            
         }
 
         //  DELETE /api/customers/1
         [HttpDelete]
-        public void DeleteCustomer(int id)
+        public IHttpActionResult DeleteCustomer(int id)
         {
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             _context.Customers.Remove(customerInDb);
             _context.SaveChanges();
+
+            return Ok();
 
         }
     }

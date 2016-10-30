@@ -5,45 +5,69 @@
 
 <h2>Movies</h2>
 @Html.ActionLink("New Movie", "New", "Movies", new {@class = "btn btn-primary" })
-<div class="list-group">
-    @if (Model.Movies.Count == 0)
-    {
-        <text>There are no movies available</text>
-    }
-    else
-    {
 
-
-        <table class="table table-bordered table-hover">
+        <table id="movies" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th>Movie</th>
                     <th>Genre</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var movie in Model.Movies)
-                {
-                    <tr>
-                        <td> @Html.ActionLink(@movie.Name, "Edit", new { id = movie.Id }, new { @class = "" })</td>
-                        <td>@movie.Genre.GenreName</td>
-                    </tr>
-                }
+            <tbody>     
             </tbody>
-
-            @*<a href="#" class="list-group-item"> @customer.Name </a>*@
-
-
         </table>
 
+        @*<a href="#" class="list-group-item"> @customer.Name </a>*@ 
 
-        @*<a href="#" class="list-group-item"> @customer.Name </a>*@
+@section scripts
+{
+    <script>
+        // DELETE Movie
+        $(document).ready(function () {
+            // call datatable for #customers table
+           var table = $("#movies").DataTable({
+                ajax: {
+                    url: "/api/movies",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                        render: function(data, type, movie) {
+                            return "<a href='/movies/edit/" + movie.id + "'>" + movie.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "genre.genreName"
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button class='btn-link js-delete' data-movie-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+            // One handler '#movies' uses filter '.js-delete' for all movies, saving memory.
+            $("#movies").on("click", ".js-delete", function () {
+                var button = $(this);
+                // bootbox dialog box
+                bootbox.confirm("Are you sure you want to delete this movie from the database?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/movies/" + button.attr("data-movie-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
 
-
-
-
+            })
+        });
+    </script>
     }
-</div>
-
 
 

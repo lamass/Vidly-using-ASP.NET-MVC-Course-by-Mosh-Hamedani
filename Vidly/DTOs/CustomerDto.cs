@@ -26,7 +26,10 @@ namespace Vidly.DTOs
         // navigation property, allows navigation from one type to another 'customer -> MembershipType'
         // navigation properties are useful for loading an object and its related objects together form the database.
 
-        // DELETED MembershipType to decouple DTO from domain model;
+        // Use MembershipTypeDto instead of MembershipType to decouple DTO from domain model;
+        public MembershipTypeDto MembershipType { get; set; }
+
+        // foreign key for Membershiptype.cs
         public byte MembershipTypeId { get; set; }
     }
 }

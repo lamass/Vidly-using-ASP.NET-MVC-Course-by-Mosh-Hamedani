@@ -100,14 +100,14 @@ namespace Vidly.Controllers
         {
             // retreive Customers model via DbContext
             // Include method is used for 'eager loading' to include the MembershipType property (and cooresponding class)
-            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
 
-            var viewModel = new CustomersViewModel()
-            {
-                Customers = customers
-            };
+            //var viewModel = new CustomersViewModel()
+            //{
+            //    Customers = customers
+            //};
 
-            return View(viewModel);
+            return View();
 
         }
 
