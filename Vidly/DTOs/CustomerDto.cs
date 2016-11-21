@@ -30,6 +30,6 @@ namespace Vidly.DTOs
         public MembershipTypeDto MembershipType { get; set; }
 
         // foreign key for Membershiptype.cs
-        public byte MembershipTypeId { get; set; }
+       // public byte MembershipTypeId { get; set; }
     }
 }

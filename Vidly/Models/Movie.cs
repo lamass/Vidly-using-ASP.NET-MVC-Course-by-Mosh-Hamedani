@@ -23,6 +23,9 @@ namespace Vidly.Models
         [Required(ErrorMessage = "The Number in Stock field must be between 1 and 20")]
         public byte InStock { get; set; }
 
+        // Availiable shows how many movies are available to rent
+        public byte Available { get; set; }
+
         [Display(Name="Release Date")]
         public DateTime ReleaseDate { get; set; }
     }

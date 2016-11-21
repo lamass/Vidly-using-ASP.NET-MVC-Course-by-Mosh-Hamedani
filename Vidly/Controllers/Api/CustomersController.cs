@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Web.Http;
 using Vidly.DTOs;
 using Vidly.Models;
+using System.Collections.Generic;
 
 namespace Vidly.Controllers.Api
 {
@@ -17,13 +18,20 @@ namespace Vidly.Controllers.Api
             _context = new ApplicationDbContext();
         }
         // GET /api/customers
-        public IHttpActionResult GetCustomers()
+        public IHttpActionResult GetCustomers(string query = null)  
         {
-            var customerDtos = _context.Customers
-                .Include(c => c.MembershipType).ToList()
+           
+            var customersQuery = _context.Customers
+                .Include(c => c.MembershipType);
+
+            if (!String.IsNullOrWhiteSpace(query))
+                customersQuery = customersQuery.Where(c => c.Name.Contains(query));
+
+            var customerDtos = customersQuery
+                .ToList()
                 .Select(Mapper.Map<Customer, CustomerDto>);
 
-            return Ok (customerDtos);
+            return Ok(customerDtos);
         }
 
         // GET /api/customer/1
@@ -39,6 +47,7 @@ namespace Vidly.Controllers.Api
         }
 
         // POST /api/customers
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpPost]
         public IHttpActionResult CreateCustomer(CustomerDto customerDto)
         {
@@ -55,6 +64,7 @@ namespace Vidly.Controllers.Api
         }
 
         // PUT /api/customers/1
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpPut]
         public IHttpActionResult UpdateCustomer(int id, CustomerDto customerDto)
         {
@@ -81,6 +91,7 @@ namespace Vidly.Controllers.Api
         }
 
         //  DELETE /api/customers/1
+        [Authorize(Roles = RoleName.CanManageMovies)]
         [HttpDelete]
         public IHttpActionResult DeleteCustomer(int id)
         {

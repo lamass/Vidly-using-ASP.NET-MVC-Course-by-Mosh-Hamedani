@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
@@ -9,6 +10,7 @@ using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
+    
     public class CustomersController : Controller
     {
         // allows access to database
@@ -96,6 +98,7 @@ namespace Vidly.Controllers
             return RedirectToAction("Index", "Customers");
         }
 
+        
         public ViewResult Index()
         {
             // retreive Customers model via DbContext
@@ -106,6 +109,15 @@ namespace Vidly.Controllers
             //{
             //    Customers = customers
             //};
+            ///////CODE BELOW DOESN'T BELONG HERE////////////
+
+            //if (MemoryCache.Default["Genres"] == null)
+            //{
+            //    MemoryCache.Default["Genres"] = _context.Genres.ToList();
+            //}
+
+            //var genres = MemoryCache.Default["Genres"] as IEnumerable<Genre>;
+
 
             return View();
 
