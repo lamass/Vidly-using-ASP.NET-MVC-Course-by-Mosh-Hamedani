@@ -25,6 +25,7 @@ namespace Vidly.Controllers
             _context.Dispose();
         }
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New()
         {
             // added DbSet Genre to IdentityModels.ApplicationDbContext
@@ -36,7 +37,9 @@ namespace Vidly.Controllers
             return View("MovieForm", viewModel);
         }
 
+        
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
@@ -76,12 +79,12 @@ namespace Vidly.Controllers
             if (movie.Id == 0)
             {
                 movie.DateAdded = DateTime.Now;
+                movie.Available = movie.InStock;
                 _context.Movies.Add(movie);
             }
             else
             {
                 var movieInDb = _context.Movies.Single(m => m.Id == movie.Id);
-
 
                 movieInDb.Name = movie.Name;
                 movieInDb.ReleaseDate = movie.ReleaseDate;
@@ -91,20 +94,17 @@ namespace Vidly.Controllers
             }
 
             _context.SaveChanges();
-            return RedirectToAction("Index", "Movies");
+            return RedirectToAction("List", "Movies");
         }
 
 
 
-        public ViewResult Index()
+        public ViewResult List()
         {
-            var movies = _context.Movies.Include(m => m.Genre).ToList();
-            var viewModel = new MoviesViewModel()
-            {
-                Movies = movies
-            };
-
-            return View(viewModel);
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View();
+            else
+                return View("ReadOnlyList");
         }
 
         public ActionResult MovieDetails(int? id)
@@ -158,28 +158,28 @@ namespace Vidly.Controllers
 
         // GET: Movies/Random
         // using a viewModel so that the view can access both Movie and Customer models.
-        public ActionResult Random()
-        {
-            var movie = new Movie() { Name = "Shrek!" };
+        //public ActionResult Random()
+        //{
+        //    var movie = new Movie() { Name = "Shrek!" };
 
-            // list of customer objects
-            var customers = new List<Customer>
-            {
-                new Customer {Name = "Customer 1"},
-                new Customer {Name = "Customer 2"}
-            };
+        //    // list of customer objects
+        //    var customers = new List<Customer>
+        //    {
+        //        new Customer {Name = "Customer 1"},
+        //        new Customer {Name = "Customer 2"}
+        //    };
 
-            // RandomMovieViewModel allows access to multiple models for the View 'Random.cshtml' 
-            var viewModel = new RandomMovieViewModel()
-            {
-                Movie = movie,
-                Customers = customers
-            };
+        //    // RandomMovieViewModel allows access to multiple models for the View 'Random.cshtml' 
+        //    var viewModel = new RandomMovieViewModel()
+        //    {
+        //        Movie = movie,
+        //        Customers = customers
+        //    };
            
            
-            return View(viewModel);
+        //    return View(viewModel);
 
-        }
+        //}
 
         //mvcaction4 (then hit tab) creates Action()
         // Legacy MapRoute for ByReleaseDate located in RouteConfig

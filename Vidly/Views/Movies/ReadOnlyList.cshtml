@@ -1,0 +1,55 @@
+﻿@model Vidly.ViewModels.MoviesViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<!--This view is for non-admins-->
+
+<h2>Movies</h2>
+
+
+        <table id="movies" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Movie</th>
+                    <th>Genre</th>
+  
+                </tr>
+            </thead>
+            <tbody>     
+            </tbody>
+        </table>
+
+        @*<a href="#" class="list-group-item"> @customer.Name </a>*@ 
+
+@section scripts
+{
+    <script>
+        // render movie list
+        $(document).ready(function () {
+            // call datatable for #customers table
+           var table = $("#movies").DataTable({
+                ajax: {
+                    url: "/api/movies",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                         //replaced edit link with details link
+                        render: function (data, type, movie) {
+                            return "<a href='/movies/movieDetails/" + movie.id + "'>" + movie.name + "</a>";
+                        }
+                        
+                    },
+                    {
+                        data: "genre.genreName"
+                    }
+                   
+                ]
+            }); // END variable table
+        });  // END document ready function
+    </script>
+    }
+
+
